@@ -1,0 +1,47 @@
+{
+  "remoteResource" : null,
+  "contributors" : [
+
+  ],
+  "version" : "1.0.0",
+  "intentInputTypes" : [
+
+  ],
+  "author" : {
+    "email" : "",
+    "homepage" : "",
+    "name" : ""
+  },
+  "permissions" : [
+    "photos"
+  ],
+  "color" : "rgba(230, 190, 1,1)",
+  "description" : null,
+  "runInApp" : true,
+  "name" : "Photo management",
+  "icon" : "photo.on.rectangle",
+  "localizedNames" : {
+    "zh" : "",
+    "es" : "",
+    "en" : "",
+    "ja" : "",
+    "ru" : "",
+    "it" : "",
+    "fr" : "",
+    "de" : "",
+    "pt" : ""
+  },
+  "iconImage" : null,
+  "entry" : "index.tsx",
+  "localizedDescriptions" : {
+    "ja" : "",
+    "es" : "",
+    "pt" : "",
+    "fr" : "",
+    "en" : "",
+    "it" : "",
+    "de" : "",
+    "zh" : "",
+    "ru" : ""
+  }
+}
