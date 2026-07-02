@@ -40,9 +40,9 @@ function PhotoImageCard({
   return (
     <ZStack
       frame={{ width: cardWidth, height: cardHeight }}
-      background="ultraThinMaterial"
+      background="thinMaterial"
       clipShape={{ type: "rect", cornerRadius: CARD_CORNER_RADIUS, style: "continuous" }}
-      shadow={{ color: "separator", radius: 12, y: 5 }}
+      shadow={{ color: "separator", radius: 22, y: 10 }}
       offset={offset}
       scaleEffect={scaleEffect}
       opacity={opacity}
@@ -55,7 +55,7 @@ function PhotoImageCard({
           resizable
           scaleToFit
           frame={{ width: cardWidth, height: cardHeight }}
-          background="regularMaterial"
+          background="ultraThinMaterial"
           clipShape={{ type: "rect", cornerRadius: CARD_CORNER_RADIUS, style: "continuous" }}
           allowsHitTesting={false}
         />
@@ -105,7 +105,7 @@ export function PhotoCardStack({
   onDragEnded,
 }: PhotoCardStackProps) {
   return (
-    <VStack spacing={12}>
+    <VStack spacing={16}>
       <ZStack frame={{ width: cardWidth, height: cardHeight }}>
         <PhotoImageCard
           image={nextItem?.image ?? null}
@@ -134,16 +134,17 @@ export function PhotoCardStack({
       <HStack
         spacing={10}
         frame={{ maxWidth: cardWidth }}
-        padding={{ horizontal: 14, vertical: 10 }}
+        padding={{ horizontal: 18, vertical: 12 }}
         background="thinMaterial"
-        clipShape={{ type: "rect", cornerRadius: 16, style: "continuous" }}
+        clipShape={{ type: "rect", cornerRadius: 20, style: "continuous" }}
+        shadow={{ color: "separator", radius: 10, y: 4 }}
       >
-        <Image systemName="calendar" imageScale="small" foregroundStyle="secondaryLabel" />
-        <Text font={13} foregroundStyle="secondaryLabel">
+        <Image systemName="calendar" imageScale="small" foregroundStyle="systemBlue" />
+        <Text font={13} fontWeight="medium" foregroundStyle="secondaryLabel">
           {formatDate(currentItem.asset.creationDate)}
         </Text>
         <Spacer />
-        <Text font={12} fontWeight="semibold" foregroundStyle="tertiaryLabel">
+        <Text font={12} fontWeight="semibold" foregroundStyle="systemBlue">
           剩余 {remainingCount} 张
         </Text>
       </HStack>

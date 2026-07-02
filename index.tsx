@@ -332,10 +332,24 @@ function App() {
       }
 
       const deletedSet = new Set(idsToDelete)
+      const visiblePhotoId = currentItem?.id ?? null
 
       setItems(list => {
         const filtered = list.filter(item => !deletedSet.has(item.id))
-        setCurrentIndex(index => Math.min(index, Math.max(filtered.length - 1, 0)))
+        setCurrentIndex(index => {
+          if (filtered.length === 0) return 0
+
+          if (visiblePhotoId && !deletedSet.has(visiblePhotoId)) {
+            const visibleIndex = filtered.findIndex(item => item.id === visiblePhotoId)
+            if (visibleIndex >= 0) return visibleIndex
+          }
+
+          const deletedBeforeCurrent = list
+            .slice(0, index)
+            .filter(item => deletedSet.has(item.id)).length
+          const nextIndex = index - deletedBeforeCurrent
+          return Math.max(0, Math.min(nextIndex, filtered.length - 1))
+        })
         return filtered
       })
       setPendingDeleteIds([])
@@ -560,44 +574,56 @@ function App() {
         offset={{ x: 0, y: isAlbumManagerOpen ? 96 : 0 }}
         zIndex={100}
       >
-        <HStack spacing={8} frame={{ maxWidth: "infinity" }}>
-          <Text font={13} fontWeight="semibold" foregroundStyle="systemOrange" frame={{ maxWidth: "infinity" }}>
+        <ZStack frame={{ maxWidth: "infinity" }}>
+          <Text font={15} fontWeight="bold" foregroundStyle="systemOrange" multilineTextAlignment="center" frame={{ maxWidth: "infinity" }}>
             相簿编辑
           </Text>
-          <Button title="完成" action={finishAlbumSorting} buttonStyle="bordered" />
-        </HStack>
+          <HStack frame={{ maxWidth: "infinity" }}>
+            <Spacer />
+            <Button title="完成" action={finishAlbumSorting} buttonStyle="bordered" />
+          </HStack>
+        </ZStack>
 
-        <List
-          frame={{ height: 320 }}
-          environments={{ editMode: albumEditMode }}
+        <ZStack
+          frame={{ maxWidth: "infinity", height: 320 }}
           background="ultraThinMaterial"
-          scrollContentBackground="hidden"
-          listStyle="plain"
+          clipShape={{ type: "rect", cornerRadius: 18, style: "continuous" }}
         >
-          <ForEach
-            data={sortableAlbums}
-            editActions="move"
-            builder={(album, index) => {
-              const isSortingSource = album.id === sortingAlbumId
-              return (
-                <HStack
-                  key={album.id}
-                  spacing={9}
-                  frame={{ maxWidth: "infinity" }}
-                  onTapGesture={() => setSortingAlbumId(album.id)}
-                >
-                  <Text font={12} fontWeight="semibold" foregroundStyle={isSortingSource ? "systemOrange" : "tertiaryLabel"} frame={{ width: 24 }}>
-                    {index + 1}
-                  </Text>
-                  <Image systemName={isSortingSource ? "folder.fill" : "folder"} imageScale="small" foregroundStyle={isSortingSource ? "systemOrange" : "secondaryLabel"} />
-                  <Text font={14} fontWeight={isSortingSource ? "semibold" : "medium"} foregroundStyle={isSortingSource ? "systemOrange" : "label"} frame={{ maxWidth: "infinity" }} lineLimit={1}>
-                    {album.title}
-                  </Text>
-                </HStack>
-              )
-            }}
-          />
-        </List>
+          <List
+            frame={{ maxWidth: "infinity", height: 320 }}
+            environments={{ editMode: albumEditMode }}
+            background="clear"
+            scrollContentBackground="hidden"
+            listStyle="plain"
+          >
+            <ForEach
+              data={sortableAlbums}
+              editActions="move"
+              builder={(album, index) => {
+                const isSortingSource = album.id === sortingAlbumId
+                return (
+                  <HStack
+                    key={album.id}
+                    spacing={9}
+                    frame={{ maxWidth: "infinity" }}
+                    padding={{ vertical: 2 }}
+                    background="clear"
+                    listRowSeparator="hidden"
+                    onTapGesture={() => setSortingAlbumId(album.id)}
+                  >
+                    <Text font={12} fontWeight="semibold" foregroundStyle={isSortingSource ? "systemOrange" : "tertiaryLabel"} frame={{ width: 24 }}>
+                      {index + 1}
+                    </Text>
+                    <Image systemName={isSortingSource ? "folder.fill" : "folder"} imageScale="small" foregroundStyle={isSortingSource ? "systemOrange" : "secondaryLabel"} />
+                    <Text font={14} fontWeight={isSortingSource ? "semibold" : "medium"} foregroundStyle={isSortingSource ? "systemOrange" : "label"} frame={{ maxWidth: "infinity" }} lineLimit={1}>
+                      {album.title}
+                    </Text>
+                  </HStack>
+                )
+              }}
+            />
+          </List>
+        </ZStack>
 
         <Text font={11} foregroundStyle="tertiaryLabel" multilineTextAlignment="center">
           长按进入后已处于编辑状态，拖动右侧三条杠即可调整顺序。
@@ -689,7 +715,7 @@ function App() {
     <NavigationStack>
       <ZStack
         frame={{ maxWidth: "infinity", maxHeight: "infinity" }}
-        background="ultraThinMaterial"
+        background="thinMaterial"
         navigationTitle=""
         navigationBarTitleDisplayMode="inline"
         toolbar={
@@ -698,13 +724,16 @@ function App() {
               <Button title="关闭" action={dismiss} />
             </ToolbarItem>
             <ToolbarItem placement="principal">
-              <VStack spacing={1} frame={{ maxWidth: "infinity" }}>
-                <Text font={13} fontWeight="semibold" foregroundStyle="label" multilineTextAlignment="center">
+              <VStack spacing={2} frame={{ maxWidth: "infinity" }}>
+                <Text font={14} fontWeight="bold" foregroundStyle="label" multilineTextAlignment="center">
                   Photo management
                 </Text>
-                <Text font={11} fontWeight="medium" foregroundStyle="secondaryLabel" multilineTextAlignment="center">
-                  {progressText}
-                </Text>
+                <HStack spacing={4}>
+                  <Image systemName="sparkles" imageScale="small" foregroundStyle="systemBlue" />
+                  <Text font={10} fontWeight="semibold" foregroundStyle="secondaryLabel" multilineTextAlignment="center">
+                    {progressText}
+                  </Text>
+                </HStack>
               </VStack>
             </ToolbarItem>
             <ToolbarItem placement="topBarTrailing">
@@ -721,17 +750,34 @@ function App() {
           position: "bottom",
         }}
       >
+        <ZStack
+          frame={{ width: 240, height: 240 }}
+          background="regularMaterial"
+          clipShape={{ type: "rect", cornerRadius: 999, style: "continuous" }}
+          opacity={0.36}
+          offset={{ x: -150, y: -285 }}
+          allowsHitTesting={false}
+        />
+        <ZStack
+          frame={{ width: 300, height: 300 }}
+          background="ultraThinMaterial"
+          clipShape={{ type: "rect", cornerRadius: 999, style: "continuous" }}
+          opacity={0.46}
+          offset={{ x: 155, y: 275 }}
+          allowsHitTesting={false}
+        />
         <VStack
-          spacing={12}
+          spacing={14}
           frame={{ maxWidth: "infinity", maxHeight: "infinity" }}
-          padding={{ horizontal: 14, top: 10, bottom: 14 }}
+          padding={{ horizontal: 14, top: 12, bottom: 14 }}
         >
           <ZStack frame={{ maxWidth: "infinity", height: photoAreaHeight }}>
             <ZStack
               frame={{ maxWidth: "infinity", height: photoAreaHeight }}
-              background="regularMaterial"
-              clipShape={{ type: "rect", cornerRadius: 30, style: "continuous" }}
-              shadow={{ color: "separator", radius: 18, y: 10 }}
+              background="thinMaterial"
+              clipShape={{ type: "rect", cornerRadius: 36, style: "continuous" }}
+              shadow={{ color: "separator", radius: 28, y: 14 }}
+              opacity={0.92}
               allowsHitTesting={false}
             />
             {isLoading ? (
@@ -780,20 +826,21 @@ function App() {
           </ZStack>
 
           <VStack
-            spacing={10}
+            spacing={14}
             frame={{ maxWidth: "infinity" }}
-            padding={{ horizontal: 14, vertical: 12 }}
+            padding={{ horizontal: 14, vertical: 15 }}
             background="regularMaterial"
-            clipShape={{ type: "rect", cornerRadius: 24, style: "continuous" }}
-            shadow={{ color: "separator", radius: 16, y: 6 }}
+            clipShape={{ type: "rect", cornerRadius: 32, style: "continuous" }}
+            shadow={{ color: "separator", radius: 24, y: 10 }}
           >
             <HStack spacing={0} frame={{ maxWidth: "infinity" }}>
               <Button action={() => undoLastOperation()} disabled={!canUndo} frame={{ maxWidth: "infinity" }}>
                 <VStack spacing={5} frame={{ maxWidth: "infinity" }}>
                   <ZStack
-                    frame={{ width: 48, height: 48 }}
-                    background={canUndo ? "thinMaterial" : "ultraThinMaterial"}
+                    frame={{ width: 52, height: 52 }}
+                    background={canUndo ? "regularMaterial" : "ultraThinMaterial"}
                     clipShape={{ type: "rect", cornerRadius: 999, style: "continuous" }}
+                    shadow={{ color: canUndo ? "separator" : "clear", radius: 8, y: 3 }}
                   >
                     <Image
                       systemName="arrow.uturn.backward"
@@ -801,47 +848,49 @@ function App() {
                       foregroundStyle={canUndo ? "systemGreen" : "tertiaryLabel"}
                     />
                   </ZStack>
-                  <Text font={10} fontWeight="medium" foregroundStyle={canUndo ? "systemGreen" : "tertiaryLabel"}>撤回</Text>
+                  <Text font={10} fontWeight="semibold" foregroundStyle={canUndo ? "systemGreen" : "tertiaryLabel"}>撤回</Text>
                 </VStack>
               </Button>
 
               <Button action={() => skipCurrentPhoto(true)} disabled={!currentItem || isThrowing || isDeleting} frame={{ maxWidth: "infinity" }}>
                 <VStack spacing={5} frame={{ maxWidth: "infinity" }}>
                   <ZStack
-                    frame={{ width: 48, height: 48 }}
-                    background="thinMaterial"
+                    frame={{ width: 52, height: 52 }}
+                    background="regularMaterial"
                     clipShape={{ type: "rect", cornerRadius: 999, style: "continuous" }}
+                    shadow={{ color: "separator", radius: 8, y: 3 }}
                   >
                     <Image systemName="arrow.left" imageScale="medium" foregroundStyle="systemBlue" />
                   </ZStack>
-                  <Text font={10} fontWeight="medium" foregroundStyle="secondaryLabel">跳过</Text>
+                  <Text font={10} fontWeight="semibold" foregroundStyle="secondaryLabel">跳过</Text>
                 </VStack>
               </Button>
 
               <Button action={() => throwCurrentToTrash()} disabled={!currentItem || isThrowing || isDeleting} frame={{ maxWidth: "infinity" }}>
                 <VStack spacing={5} frame={{ maxWidth: "infinity" }}>
                   <ZStack
-                    frame={{ width: 48, height: 48 }}
-                    background="thickMaterial"
+                    frame={{ width: 52, height: 52 }}
+                    background="regularMaterial"
                     clipShape={{ type: "rect", cornerRadius: 999, style: "continuous" }}
-                    shadow={{ color: "systemRed", radius: 10, y: 4 }}
+                    shadow={{ color: "separator", radius: 8, y: 3 }}
                   >
                     <Image systemName="trash.fill" imageScale="medium" foregroundStyle="systemRed" />
                   </ZStack>
-                  <Text font={10} fontWeight="medium" foregroundStyle="systemRed">删除</Text>
+                  <Text font={10} fontWeight="semibold" foregroundStyle="systemRed">删除</Text>
                 </VStack>
               </Button>
 
               <Button action={() => toggleAlbumManager()} disabled={isLoading || isDeleting} frame={{ maxWidth: "infinity" }}>
                 <VStack spacing={5} frame={{ maxWidth: "infinity" }}>
                   <ZStack
-                    frame={{ width: 48, height: 48 }}
-                    background={isAlbumManagerOpen ? "thinMaterial" : "ultraThinMaterial"}
+                    frame={{ width: 52, height: 52 }}
+                    background={isAlbumManagerOpen ? "regularMaterial" : "ultraThinMaterial"}
                     clipShape={{ type: "rect", cornerRadius: 999, style: "continuous" }}
+                    shadow={{ color: isAlbumManagerOpen ? "separator" : "clear", radius: 8, y: 3 }}
                   >
                     <Image systemName="folder.badge.plus" imageScale="medium" foregroundStyle={isAlbumManagerOpen ? "systemBlue" : "secondaryLabel"} />
                   </ZStack>
-                  <Text font={10} fontWeight="medium" foregroundStyle={isAlbumManagerOpen ? "systemBlue" : "secondaryLabel"}>相簿</Text>
+                  <Text font={10} fontWeight="semibold" foregroundStyle={isAlbumManagerOpen ? "systemBlue" : "secondaryLabel"}>相簿</Text>
                 </VStack>
               </Button>
             </HStack>

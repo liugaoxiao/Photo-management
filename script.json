@@ -1,51 +1,51 @@
 {
-  "icon" : "photo.on.rectangle",
+  "iconImage" : null,
   "contributors" : [
 
   ],
-  "intentInputTypes" : [
-
-  ],
-  "runInApp" : true,
-  "description" : null,
-  "author" : {
-    "homepage" : null,
-    "name" : "",
-    "email" : ""
-  },
+  "version" : "1.0.4",
   "permissions" : [
     "photos"
   ],
+  "entry" : "index.tsx",
   "color" : "rgba(230, 190, 1,1)",
-  "localizedDescriptions" : {
-    "ru" : "",
-    "zh" : "",
-    "en" : "",
-    "ja" : "",
-    "de" : "",
-    "it" : "",
-    "pt" : "",
-    "fr" : "",
-    "es" : ""
-  },
   "localizedNames" : {
-    "zh" : "",
     "ru" : "",
-    "en" : "",
     "ja" : "",
-    "it" : "",
-    "de" : "",
     "es" : "",
+    "zh" : "",
+    "it" : "",
+    "fr" : "",
+    "de" : "",
     "pt" : "",
-    "fr" : ""
+    "en" : ""
   },
-  "name" : "Photo management",
+  "author" : {
+    "email" : "",
+    "homepage" : null,
+    "name" : ""
+  },
+  "runInApp" : true,
+  "description" : null,
   "remoteResource" : {
     "url" : "https:\/\/github.com\/liugaoxiao\/Photo-management",
-    "hash" : "9f178e63ac3a4084709e995e27f79418",
+    "hash" : "eafb95178b776bae1fef0b5782978de1",
     "autoUpdateInterval" : null
   },
-  "version" : "1.0.3",
-  "iconImage" : null,
-  "entry" : "index.tsx"
+  "localizedDescriptions" : {
+    "zh" : "",
+    "pt" : "",
+    "de" : "",
+    "en" : "",
+    "fr" : "",
+    "ru" : "",
+    "ja" : "",
+    "es" : "",
+    "it" : ""
+  },
+  "icon" : "photo.on.rectangle",
+  "intentInputTypes" : [
+
+  ],
+  "name" : "图片管理器"
 }
