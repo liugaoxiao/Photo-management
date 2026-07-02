@@ -1,51 +1,51 @@
 {
-  "entry" : "index.tsx",
-  "permissions" : [
-    "photos"
-  ],
-  "name" : "Photo management",
-  "author" : {
-    "name" : "",
-    "email" : "",
-    "homepage" : ""
-  },
+  "icon" : "photo.on.rectangle",
   "contributors" : [
 
   ],
-  "description" : null,
-  "runInApp" : true,
-  "localizedDescriptions" : {
-    "en" : "",
-    "pt" : "",
-    "es" : "",
-    "ru" : "",
-    "it" : "",
-    "de" : "",
-    "ja" : "",
-    "zh" : "",
-    "fr" : ""
-  },
-  "icon" : "photo.on.rectangle",
-  "iconImage" : null,
-  "localizedNames" : {
-    "it" : "",
-    "ja" : "",
-    "en" : "",
-    "de" : "",
-    "es" : "",
-    "fr" : "",
-    "pt" : "",
-    "zh" : "",
-    "ru" : ""
-  },
-  "color" : "rgba(230, 190, 1,1)",
-  "version" : "1.0.2",
-  "remoteResource" : {
-    "autoUpdateInterval" : null,
-    "hash" : "7B65AD69-267C-4106-A76E-BF9C69BD8F76",
-    "url" : "https:\/\/github.com\/liugaoxiao\/Photo-management"
-  },
   "intentInputTypes" : [
 
-  ]
+  ],
+  "runInApp" : true,
+  "description" : null,
+  "author" : {
+    "homepage" : null,
+    "name" : "",
+    "email" : ""
+  },
+  "permissions" : [
+    "photos"
+  ],
+  "color" : "rgba(230, 190, 1,1)",
+  "localizedDescriptions" : {
+    "ru" : "",
+    "zh" : "",
+    "en" : "",
+    "ja" : "",
+    "de" : "",
+    "it" : "",
+    "pt" : "",
+    "fr" : "",
+    "es" : ""
+  },
+  "localizedNames" : {
+    "zh" : "",
+    "ru" : "",
+    "en" : "",
+    "ja" : "",
+    "it" : "",
+    "de" : "",
+    "es" : "",
+    "pt" : "",
+    "fr" : ""
+  },
+  "name" : "Photo management",
+  "remoteResource" : {
+    "url" : "https:\/\/github.com\/liugaoxiao\/Photo-management",
+    "hash" : "9f178e63ac3a4084709e995e27f79418",
+    "autoUpdateInterval" : null
+  },
+  "version" : "1.0.3",
+  "iconImage" : null,
+  "entry" : "index.tsx"
 }

@@ -33,7 +33,7 @@ import { interactiveMotion, trashFlightMotion } from "./utils"
 
 const initialOffset: PointOffset = { x: 0, y: 0 }
 const ALBUM_ORDER_STORAGE_KEY = "photo-manager.album-order"
-const PROCESSED_PHOTOS_STORAGE_KEY = "photo-manager.processed-photo-ids"
+const PROCESSED_PHOTOS_STORAGE_KEY = "photo-manager.album-processed-photo-ids"
 const MAX_PROCESSED_PHOTO_IDS = 20000
 const PREFETCH_PHOTO_COUNT = 100
 
@@ -62,7 +62,7 @@ function getPrefetchIndexes(startIndex: number) {
 
 type OperationRecord = {
   id: string
-  action: "delete" | "skip" | "album"
+  action: "delete" | "skip" | "processedSkip" | "album"
 }
 
 type AlbumOption = {
@@ -248,7 +248,6 @@ function App() {
       if (ids.includes(handledPhotoId)) return ids
       return [...ids, handledPhotoId]
     })
-    markPhotoAsProcessed(handledPhotoId)
     setOperationHistory(history => [...history, { id: handledPhotoId, action: "delete" }])
     loadImagesForIndexes(items, getPrefetchIndexes(currentIndex + 1))
 
@@ -257,7 +256,7 @@ function App() {
     setIsThrowing(false)
   }
 
-  async function skipCurrentPhoto() {
+  async function skipCurrentPhoto(markAsProcessed = false) {
     if (!currentItem || isThrowing || isDeleting) return
 
     const handledPhotoId = currentItem.id
@@ -272,8 +271,12 @@ function App() {
       }
     )
 
+    if (markAsProcessed) {
+      markPhotoAsProcessed(handledPhotoId)
+    }
+
     resetCardState()
-    setOperationHistory(history => [...history, { id: handledPhotoId, action: "skip" }])
+    setOperationHistory(history => [...history, { id: handledPhotoId, action: markAsProcessed ? "processedSkip" : "skip" }])
     loadImagesForIndexes(items, getPrefetchIndexes(currentIndex + 1))
     setCurrentIndex(index => index + 1)
     setIsThrowing(false)
@@ -285,7 +288,7 @@ function App() {
     const last = operationHistory[operationHistory.length - 1]
     setOperationHistory(history => history.slice(0, -1))
 
-    if (last.action !== "skip") {
+    if (last.action === "album" || last.action === "processedSkip") {
       unmarkPhotoAsProcessed(last.id)
     }
 
@@ -375,7 +378,7 @@ function App() {
     if (shouldDelete) {
       throwCurrentToTrash()
     } else if (shouldSkip) {
-      skipCurrentPhoto()
+      skipCurrentPhoto(false)
     } else {
       resetDrag()
     }
@@ -802,7 +805,7 @@ function App() {
                 </VStack>
               </Button>
 
-              <Button action={() => skipCurrentPhoto()} disabled={!currentItem || isThrowing || isDeleting} frame={{ maxWidth: "infinity" }}>
+              <Button action={() => skipCurrentPhoto(true)} disabled={!currentItem || isThrowing || isDeleting} frame={{ maxWidth: "infinity" }}>
                 <VStack spacing={5} frame={{ maxWidth: "infinity" }}>
                   <ZStack
                     frame={{ width: 48, height: 48 }}
