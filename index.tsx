@@ -553,7 +553,7 @@ function App() {
         padding={{ horizontal: 12, vertical: 10 }}
         background="regularMaterial"
         clipShape={{ type: "rect", cornerRadius: 18, style: "continuous" }}
-        shadow={{ color: "rgba(0,0,0,0.22)", radius: 22, y: 10 }}
+        shadow={{ color: "separator", radius: 22, y: 10 }}
         offset={{ x: 0, y: isAlbumManagerOpen ? 96 : 0 }}
         zIndex={100}
       >
@@ -694,6 +694,16 @@ function App() {
             <ToolbarItem placement="topBarLeading">
               <Button title="关闭" action={dismiss} />
             </ToolbarItem>
+            <ToolbarItem placement="principal">
+              <VStack spacing={1} frame={{ maxWidth: "infinity" }}>
+                <Text font={13} fontWeight="semibold" foregroundStyle="label" multilineTextAlignment="center">
+                  Photo management
+                </Text>
+                <Text font={11} fontWeight="medium" foregroundStyle="secondaryLabel" multilineTextAlignment="center">
+                  {progressText}
+                </Text>
+              </VStack>
+            </ToolbarItem>
             <ToolbarItem placement="topBarTrailing">
               <Button action={() => deletePendingPhotos()} disabled={isDeleting}>
                 {renderTrashLabel()}
@@ -713,54 +723,36 @@ function App() {
           frame={{ maxWidth: "infinity", maxHeight: "infinity" }}
           padding={{ horizontal: 14, top: 10, bottom: 14 }}
         >
-          <HStack
-            spacing={10}
-            frame={{ maxWidth: "infinity" }}
-            padding={{ horizontal: 14, vertical: 10 }}
-            background="thinMaterial"
-            clipShape={{ type: "rect", cornerRadius: 18, style: "continuous" }}
-            shadow={{ color: "rgba(0,0,0,0.08)", radius: 12, y: 4 }}
-          >
-            <VStack alignment="center" spacing={5} frame={{ maxWidth: "infinity" }}>
-              <Text font={17} fontWeight="bold" foregroundStyle="label" multilineTextAlignment="center">
-                全部照片
-              </Text>
-              <Text font={12} fontWeight="medium" foregroundStyle="secondaryLabel" multilineTextAlignment="center">
-                Photo editing · {progressText}
-              </Text>
-            </VStack>
-          </HStack>
-
           <ZStack frame={{ maxWidth: "infinity", height: photoAreaHeight }}>
             <ZStack
               frame={{ maxWidth: "infinity", height: photoAreaHeight }}
               background="regularMaterial"
               clipShape={{ type: "rect", cornerRadius: 30, style: "continuous" }}
-              shadow={{ color: "rgba(0,0,0,0.18)", radius: 18, y: 10 }}
+              shadow={{ color: "separator", radius: 18, y: 10 }}
               allowsHitTesting={false}
             />
             {isLoading ? (
               <VStack spacing={12}>
                 <ProgressView />
-                <Text font={15} foregroundStyle="white">正在载入全部照片</Text>
+                <Text font={15} foregroundStyle="secondaryLabel">正在载入全部照片</Text>
               </VStack>
             ) : isEmpty ? (
               <VStack spacing={12} padding={28}>
-                <Image systemName="photo.on.rectangle.angled" imageScale="large" foregroundStyle="white" />
-                <Text font={20} fontWeight="semibold" foregroundStyle="white">
+                <Image systemName="photo.on.rectangle.angled" imageScale="large" foregroundStyle="secondaryLabel" />
+                <Text font={20} fontWeight="semibold" foregroundStyle="label">
                   没有找到照片
                 </Text>
-                <Text font={14} foregroundStyle="rgba(255,255,255,0.68)" multilineTextAlignment="center">
+                <Text font={14} foregroundStyle="secondaryLabel" multilineTextAlignment="center">
                   没有找到未处理照片。
                 </Text>
               </VStack>
             ) : isFinished ? (
               <VStack spacing={14} padding={28}>
                 <Image systemName="checkmark.circle.fill" imageScale="large" foregroundStyle="systemGreen" />
-                <Text font={22} fontWeight="bold" foregroundStyle="white">
+                <Text font={22} fontWeight="bold" foregroundStyle="label">
                   浏览完成
                 </Text>
-                <Text font={14} foregroundStyle="rgba(255,255,255,0.72)" multilineTextAlignment="center">
+                <Text font={14} foregroundStyle="secondaryLabel" multilineTextAlignment="center">
                   已放入垃圾箱 {pendingDeleteIds.length} 张。点击右上角垃圾箱可统一删除。
                 </Text>
                 <Button title="重新读取" action={() => loadPhotos()} buttonStyle="borderedProminent" />
@@ -779,7 +771,7 @@ function App() {
             ) : (
               <VStack spacing={12}>
                 <ProgressView />
-                <Text font={15} foregroundStyle="white">正在准备图片…</Text>
+                <Text font={15} foregroundStyle="secondaryLabel">正在准备图片…</Text>
               </VStack>
             )}
           </ZStack>
@@ -790,7 +782,7 @@ function App() {
             padding={{ horizontal: 14, vertical: 12 }}
             background="regularMaterial"
             clipShape={{ type: "rect", cornerRadius: 24, style: "continuous" }}
-            shadow={{ color: "rgba(0,0,0,0.10)", radius: 16, y: 6 }}
+            shadow={{ color: "separator", radius: 16, y: 6 }}
           >
             <HStack spacing={0} frame={{ maxWidth: "infinity" }}>
               <Button action={() => undoLastOperation()} disabled={!canUndo} frame={{ maxWidth: "infinity" }}>
@@ -829,7 +821,7 @@ function App() {
                     frame={{ width: 48, height: 48 }}
                     background="thickMaterial"
                     clipShape={{ type: "rect", cornerRadius: 999, style: "continuous" }}
-                    shadow={{ color: "rgba(255,59,48,0.35)", radius: 12, y: 5 }}
+                    shadow={{ color: "systemRed", radius: 10, y: 4 }}
                   >
                     <Image systemName="trash.fill" imageScale="medium" foregroundStyle="systemRed" />
                   </ZStack>
@@ -851,9 +843,6 @@ function App() {
               </Button>
             </HStack>
             {renderAlbumManager()}
-            <Text font={12} foregroundStyle="tertiaryLabel" multilineTextAlignment="center">
-              左滑跳过，右滑或点删除加入垃圾箱；点相簿可将当前照片存入对应相簿，并自动切换下一张。
-            </Text>
           </VStack>
         </VStack>
 

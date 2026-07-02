@@ -5,7 +5,7 @@ export const CARD_CORNER_RADIUS = 22
 export const screenWidth = Device.screen.width
 export const screenHeight = Device.screen.height
 export const cardWidth = Math.min(screenWidth - 40, 420)
-export const cardHeight = Math.max(300, Math.min(screenHeight - 390, 460))
+export const cardHeight = Math.max(340, Math.min(screenHeight - 340, 520))
 export const photoAreaHeight = cardHeight + 34
 
 export const trashTargetOffset = {

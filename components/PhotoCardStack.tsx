@@ -42,7 +42,7 @@ function PhotoImageCard({
       frame={{ width: cardWidth, height: cardHeight }}
       background="ultraThinMaterial"
       clipShape={{ type: "rect", cornerRadius: CARD_CORNER_RADIUS, style: "continuous" }}
-      shadow={{ color: `rgba(0,0,0,${shadowOpacity})`, radius: 12, y: 5 }}
+      shadow={{ color: "separator", radius: 12, y: 5 }}
       offset={offset}
       scaleEffect={scaleEffect}
       opacity={opacity}
@@ -138,12 +138,12 @@ export function PhotoCardStack({
         background="thinMaterial"
         clipShape={{ type: "rect", cornerRadius: 16, style: "continuous" }}
       >
-        <Image systemName="calendar" imageScale="small" foregroundStyle="rgba(255,255,255,0.72)" />
-        <Text font={13} foregroundStyle="rgba(255,255,255,0.76)">
+        <Image systemName="calendar" imageScale="small" foregroundStyle="secondaryLabel" />
+        <Text font={13} foregroundStyle="secondaryLabel">
           {formatDate(currentItem.asset.creationDate)}
         </Text>
         <Spacer />
-        <Text font={12} fontWeight="semibold" foregroundStyle="rgba(255,255,255,0.62)">
+        <Text font={12} fontWeight="semibold" foregroundStyle="tertiaryLabel">
           剩余 {remainingCount} 张
         </Text>
       </HStack>
